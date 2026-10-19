@@ -1,0 +1,26 @@
+class Agentwake < Formula
+  desc "Keep your Mac awake while Claude Code and long commands are running"
+  homepage "https://github.com/jamesleetu/agentwake"
+  url "https://github.com/jamesleetu/agentwake/archive/refs/tags/v0.1.0.tar.gz"
+  sha256 "e388548ac6ad7391fe8ee83fb34081087b622b0a631ce7672306855fe3334920"
+  license "MIT"
+
+  depends_on xcode: ["15.0", :build]
+  depends_on :macos
+
+  def install
+    system "swift", "build", "--disable-sandbox", "-c", "release"
+    bin.install ".build/release/agentwake"
+  end
+
+  def caveats
+    <<~EOS
+      Connect agentwake to Claude Code:
+        agentwake install-hooks
+    EOS
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/agentwake --version")
+  end
+end
